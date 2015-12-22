@@ -33,9 +33,6 @@ See the app2proxy definition in the example playbook below.
 
 `nginx_reverse_proxy_config_directory:` location to store config files for nginx (default: `/etc/nginx/conf.d`)
 
-
-
-
 Dependencies
 ------------
 
