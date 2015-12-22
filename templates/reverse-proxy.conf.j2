@@ -1,0 +1,17 @@
+# {{ ansible_managed }}
+
+upstream {{ item.nginx_reverse_proxy_backend_name }} {
+    {% for backend in item.nginx_reverse_proxy_backends %}
+    server {{ backend }};
+    {% endfor %}
+}
+
+server {
+    listen 80;
+    server_name {{ item.nginx_reverse_proxy_domains|join(' ') }};
+    location / {
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   Host      $http_host;
+        proxy_pass         http://{{ item.nginx_reverse_proxy_backend_name }};
+    }
+}
