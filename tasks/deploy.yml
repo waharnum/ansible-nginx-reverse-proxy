@@ -1,12 +1,9 @@
 ---
-- name: debug
-  debug:
-    var: nginx_reverse_proxy_proxies
 
 - name: deploy reverse proxy configuration
   template:
     src: reverse-proxy.conf.j2
-    dest: "{{ nginx_reverse_proxy_config_directory }}/{{ item.nginx_reverse_proxy_config_name }}.conf"
+    dest: "{{ nginx_reverse_proxy_config_directory }}/{{ item.config_name }}.conf"
   with_items: nginx_reverse_proxy_proxies
   notify:
     - restart nginx
