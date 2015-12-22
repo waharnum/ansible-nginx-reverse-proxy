@@ -29,19 +29,21 @@ Along with the variables that must be configured for each reverse proxy configur
 
 See the app2proxy definition in the example playbook below.
 
-### Global Defaults
+### Role Defaults
 
 `nginx_reverse_proxy_config_directory:` location to store config files for nginx (default: `/etc/nginx/conf.d`)
+`nginx_reverse_proxy_nginx_service`: name the nginx service runs under, for the handler restart if config files are changed (default: `nginx`)
 
 Dependencies
 ------------
 
-An nginx role with a handler called "restart nginx" that... restarts nginx :)
+nginx is expected to be installed on the server being managed
 
 Example Playbook
 ----------------
 
 ```
+---
 - hosts: nginx
   remote_user: vagrant
   become: yes
@@ -62,9 +64,18 @@ Example Playbook
         domains:
           - app2.192.168.88.10.xip.io
         balancer_config: least_conn;
+      - config_name: sessionappproxy
+        backend_name: session-app-backend
+        backends:
+          - localhost:1880
+          - localhost:1881
+          - localhost:1882
+          - localhost:1883
+        domains:
+          - sessioned-app.192.168.88.10.xip.io
+        balancer_config: ip_hash;
 
   roles:
-    - nginx
     - ansible-nginx-reverse-proxy
 
 ```    

@@ -2,3 +2,4 @@
 # defaults file for ansible-nginx-reverse-proxy
 
 nginx_reverse_proxy_config_directory: /etc/nginx/conf.d
+nginx_reverse_proxy_nginx_service: nginx
