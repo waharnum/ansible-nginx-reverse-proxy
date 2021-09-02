@@ -30,6 +30,8 @@ Along with the variables that must be configured for each reverse proxy configur
   either `80` or `443`
 * `certificate.cert`: Path to a TLS certificate public key
 * `certificate.key`: Path to a TLS certificate private key
+* `use_https_to_service`: If true, use https:// as the scheme to the proxied
+  resource.
 
 See the app2proxy definition in the example playbook below.
 

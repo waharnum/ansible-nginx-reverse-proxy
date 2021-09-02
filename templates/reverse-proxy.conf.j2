@@ -23,6 +23,10 @@ server {
     location / {
         proxy_set_header   X-Real-IP $remote_addr;
         proxy_set_header   Host      $http_host;
+        {% if item.use_https_to_service is defined and item.use_https_to_service -%}
+        proxy_pass         https://{{ item.backend_name }};
+        {% else -%}
         proxy_pass         http://{{ item.backend_name }};
+        {% endif -%}
     }
 }
