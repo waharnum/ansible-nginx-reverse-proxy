@@ -26,6 +26,10 @@ Role Variables
 Along with the variables that must be configured for each reverse proxy configuration, some configuration options are available on a per-proxy basis:
 
 * `balancer_config`: specify a load balancing strategy other than the default round robin. Valid options include `least_conn` (for least connections) and `ip_hash` (for session persistence using IP hashing).
+* `port`: specify a port on which to listen for the remote proxy; most likely
+  either `80` or `443`
+* `certificate.cert`: Path to a TLS certificate public key
+* `certificate.key`: Path to a TLS certificate private key
 
 See the app2proxy definition in the example playbook below.
 

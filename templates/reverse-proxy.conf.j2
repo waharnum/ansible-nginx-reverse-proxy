@@ -10,7 +10,15 @@ upstream {{ item.backend_name }} {
 }
 
 server {
+    {% if item.port is defined -%}
+    listen {{ item.port }};
+    {% else -%}
     listen 80;
+    {% endif -%}
+    {% if item.certificate is defined -%}
+    ssl_certificate {{ item.certificate.cert }};
+    ssl_certificate_key {{ item.certificate.key }};
+    {% endif -%}
     server_name {{ item.domains|join(' ') }};
     location / {
         proxy_set_header   X-Real-IP $remote_addr;
