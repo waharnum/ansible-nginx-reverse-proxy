@@ -26,6 +26,20 @@ Role Variables
 Along with the variables that must be configured for each reverse proxy configuration, some configuration options are available on a per-proxy basis:
 
 * `balancer_config`: specify a load balancing strategy other than the default round robin. Valid options include `least_conn` (for least connections) and `ip_hash` (for session persistence using IP hashing).
+* `port`: specify a port on which to listen for the remote proxy; most likely
+  either `80` or `443`
+* `certificate.cert`: Path to a TLS certificate public key
+* `certificate.key`: Path to a TLS certificate private key
+* `use_https_to_service`: If true, use https:// as the scheme to the proxied
+  resource.
+* `extra_server_args`: A list of key-value pairs for additional Nginx
+  configuration pairs. For example, setting
+  ```yaml
+  extra_server_args:
+    - name: client_max_body_size
+      value: 100M
+  ```
+  would allow a client request body of up to 100M through the proxy.
 
 See the app2proxy definition in the example playbook below.
 
@@ -75,10 +89,21 @@ Example Playbook
           - sessioned-app.192.168.88.10.xip.io
         balancer_config: ip_hash;
 
+      - config_name: bigfilesproxy
+        backend_name: my-big-files
+        backends:
+          - localhost:9443
+        domains:
+          - bigfiles.192.168.88.10.xip.io
+        use_https_to_service: true
+        extra_server_args:
+          - name: client_max_body_size
+            value: 100M
+
   roles:
     - ansible-nginx-reverse-proxy
 
-```    
+```
 
 License
 -------

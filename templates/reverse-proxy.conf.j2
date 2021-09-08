@@ -10,11 +10,28 @@ upstream {{ item.backend_name }} {
 }
 
 server {
+    {% if item.port is defined -%}
+    listen {{ item.port }};
+    {% else -%}
     listen 80;
+    {% endif -%}
+    {% if item.certificate is defined -%}
+    ssl_certificate {{ item.certificate.cert }};
+    ssl_certificate_key {{ item.certificate.key }};
+    {% endif -%}
+    {% if item.extra_server_args is defined and item.extra_server_args -%}
+    {% for arg in item.extra_server_args %}
+    {{ arg.name }}  {{ arg.value }};
+    {% endfor -%}
+    {% endif -%}
     server_name {{ item.domains|join(' ') }};
     location / {
         proxy_set_header   X-Real-IP $remote_addr;
         proxy_set_header   Host      $http_host;
+        {% if item.use_https_to_service is defined and item.use_https_to_service -%}
+        proxy_pass         https://{{ item.backend_name }};
+        {% else -%}
         proxy_pass         http://{{ item.backend_name }};
+        {% endif -%}
     }
 }
