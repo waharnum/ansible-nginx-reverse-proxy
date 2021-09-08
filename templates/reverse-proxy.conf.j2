@@ -19,6 +19,11 @@ server {
     ssl_certificate {{ item.certificate.cert }};
     ssl_certificate_key {{ item.certificate.key }};
     {% endif -%}
+    {% if item.extra_server_args is defined and item.extra_server_args -%}
+    {% for arg in item.extra_server_args %}
+    {{ arg.name }}  {{ arg.value }};
+    {% endfor -%}
+    {% endif -%}
     server_name {{ item.domains|join(' ') }};
     location / {
         proxy_set_header   X-Real-IP $remote_addr;
